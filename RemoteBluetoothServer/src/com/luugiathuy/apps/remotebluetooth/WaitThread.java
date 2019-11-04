@@ -10,7 +10,10 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
 
-public class WaitThread implements Runnable{
+public class WaitThread implements Runnable {
+	
+	// Hyphenated UUID: 04c6093b-0000-1000-8000-00805f9b34fb
+	private static final String SERVER_UUID = "04c6093b00001000800000805f9b34fb";
 
 	/** Constructor */
 	public WaitThread() {
@@ -34,8 +37,7 @@ public class WaitThread implements Runnable{
 			local = LocalDevice.getLocalDevice();
 			local.setDiscoverable(DiscoveryAgent.GIAC);
 			
-			// Hyphenated UUID: 04c6093b-0000-1000-8000-00805f9b34fb
-			UUID uuid = new UUID("04c6093b00001000800000805f9b34fb", false);
+			UUID uuid = new UUID(SERVER_UUID, false);
 			System.out.println(uuid.toString());
 			
             String url = "btspp://localhost:" + uuid.toString() + ";name=RemoteBluetooth";
@@ -50,19 +52,31 @@ public class WaitThread implements Runnable{
 		}
 		
 		// waiting for connection
-		while(true) {
-			try {
-				System.out.println("waiting for connection...");
-	            connection = notifier.acceptAndOpen();
-	            
-	            Thread processThread = new Thread(new ProcessConnectionThread(connection));
-	            processThread.start();
-	            System.out.println("Running...");
-	            
-			} catch (Exception e) {
-				e.printStackTrace();
-				return;
-			}
+		try {
+			System.out.println("waiting for connection...");
+            connection = notifier.acceptAndOpen();
+            
+            Thread processThread = new Thread(new ProcessConnectionThread(connection));
+            processThread.start();
+            
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
 		}
+		
+		// waiting for connection
+//		while(true) {
+//			try {
+//				System.out.println("waiting for connection...");
+//	            connection = notifier.acceptAndOpen();
+//	            
+//	            Thread processThread = new Thread(new ProcessConnectionThread(connection));
+//	            processThread.start();
+//	            
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				return;
+//			}
+//		}
 	}
 }

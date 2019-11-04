@@ -35,7 +35,7 @@ public class ProcessConnectionThread implements Runnable{
 			InputStream inputStream = mConnection.openInputStream();
 			BufferedReader bReader=new BufferedReader(new InputStreamReader(inputStream));
 
-			System.out.println("waiting for input");
+			System.out.println("Waiting for input...");
 	        
 	        while (true) {
 	        	String data = bReader.readLine();
