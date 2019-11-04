@@ -2,8 +2,11 @@ package com.luugiathuy.apps.remotebluetooth;
 
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
+import javax.bluetooth.RemoteDevice;
 import javax.microedition.io.StreamConnection;
 
 public class ProcessConnectionThread implements Runnable{
@@ -23,22 +26,38 @@ public class ProcessConnectionThread implements Runnable{
 	@Override
 	public void run() {
 		try {
+			RemoteDevice dev = RemoteDevice.getRemoteDevice(mConnection);
+			System.out.println("Device connected.");
+	        System.out.println("Remote device address: " + dev.getBluetoothAddress());
+	        System.out.println("Remote device name: " + dev.getFriendlyName(true));
 			
 			// prepare to receive data
 			InputStream inputStream = mConnection.openInputStream();
-	        
+			BufferedReader bReader=new BufferedReader(new InputStreamReader(inputStream));
+
 			System.out.println("waiting for input");
 	        
 	        while (true) {
-	        	int command = inputStream.read();
+	        	String data = bReader.readLine();
 	        	
-	        	if (command == EXIT_CMD)
-	        	{	
-	        		System.out.println("finish process");
+	        	if (data != null) {
+	        		System.out.println("Client disconnected.");
+	        		System.out.println("Bluetooth Server disconnected.");
 	        		break;
 	        	}
 	        	
-	        	processCommand(command);
+	        	System.out.println(data);
+	        	
+	        	
+//	        	int command = inputStream.read();
+//	        	
+//	        	if (command == EXIT_CMD)
+//	        	{	
+//	        		System.out.println("finish process");
+//	        		break;
+//	        	}
+//	        	
+//	        	processCommand(command);
         	}
         } catch (Exception e) {
     		e.printStackTrace();

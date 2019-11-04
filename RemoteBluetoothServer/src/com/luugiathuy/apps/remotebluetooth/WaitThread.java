@@ -34,6 +34,7 @@ public class WaitThread implements Runnable{
 			local = LocalDevice.getLocalDevice();
 			local.setDiscoverable(DiscoveryAgent.GIAC);
 			
+			// Hyphenated UUID: 04c6093b-0000-1000-8000-00805f9b34fb
 			UUID uuid = new UUID("04c6093b00001000800000805f9b34fb", false);
 			System.out.println(uuid.toString());
 			
@@ -56,6 +57,7 @@ public class WaitThread implements Runnable{
 	            
 	            Thread processThread = new Thread(new ProcessConnectionThread(connection));
 	            processThread.start();
+	            System.out.println("Running...");
 	            
 			} catch (Exception e) {
 				e.printStackTrace();
