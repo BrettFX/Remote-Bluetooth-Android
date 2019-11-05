@@ -28,11 +28,17 @@ public class WaitThread implements Runnable {
 		waitForConnection();		
 	}
 	
-	
-	@Override
-	protected void finalize() throws Throwable {
-		local.setDiscoverable(DiscoveryAgent.NOT_DISCOVERABLE);
-		notifier.close();
+	public void close() throws IOException {
+		if (local != null) {
+			System.out.println("Setting local device to NOT_DISCOVERABLE");
+			local.setDiscoverable(DiscoveryAgent.NOT_DISCOVERABLE);
+		}
+		
+		if (notifier != null) {
+			System.out.println("Closing StreamConnectionNotifier.");
+			notifier.close();
+		}
+		
 	}
 
 	/** Waiting for connection from devices */
@@ -65,11 +71,11 @@ public class WaitThread implements Runnable {
 			System.out.println("waiting for connection...");
             connection = notifier.acceptAndOpen();
             
-            Thread processThread = new Thread(new ProcessConnectionThread(connection));
-            processThread.start();
+            ProcessConnectionThread processThread = new ProcessConnectionThread(connection);
+            AsyncUtils.executeAsync(processThread);
             
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Notifier has been closed; Connection is closed");
 			return;
 		}
 		

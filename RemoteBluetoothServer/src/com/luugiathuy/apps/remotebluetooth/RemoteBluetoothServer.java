@@ -1,12 +1,14 @@
 package com.luugiathuy.apps.remotebluetooth;
 
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.Scanner;
 
 public class RemoteBluetoothServer{
 	
 	public static void main(String[] args) {
-//		Thread waitThread = new Thread(new WaitThread());
-//		AsyncUtils.executeAsync(waitThread);
+		WaitThread waitThread = new WaitThread();
+		AsyncUtils.executeAsync(waitThread);
 //		
 //		try {
 //			Thread.sleep(3000);
@@ -20,20 +22,26 @@ public class RemoteBluetoothServer{
 //		waitThread.start();
 		
 		Scanner scanner = new Scanner(System.in);
+		HashSet<String> sentinals = new HashSet<String>();
+		sentinals.add("exit");
+		sentinals.add("quit");
 		while(true) {
+			System.out.print(">>> ");
 			String cmd = scanner.nextLine();
-			if (cmd.toLowerCase().equals("exit")) {
+			if (sentinals.contains(cmd.toLowerCase())) {
 				System.out.println("Closing application...");
-//				AsyncUtils.shutdownNow();
+				
+				try {
+					waitThread.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					AsyncUtils.shutdownNow();
+					scanner.close();
+				}
+				
+				break;
 			}
 		}
 	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		System.out.println("Closing application...");
-		AsyncUtils.shutdownNow();
-	}
-	
-	
 }

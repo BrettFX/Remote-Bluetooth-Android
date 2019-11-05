@@ -92,10 +92,4 @@ public class ProcessConnectionThread implements Runnable{
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
-	protected void finalize() throws Throwable {
-		System.out.println("Closing connection...");
-		mConnection.close();
-	}
 }
