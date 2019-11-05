@@ -14,9 +14,13 @@ public class WaitThread implements Runnable {
 	
 	// Hyphenated UUID: 04c6093b-0000-1000-8000-00805f9b34fb
 	private static final String SERVER_UUID = "04c6093b00001000800000805f9b34fb";
+	
+	private LocalDevice local;
+	private StreamConnectionNotifier notifier;
 
 	/** Constructor */
 	public WaitThread() {
+		local = null;
 	}
 	
 	@Override
@@ -24,12 +28,17 @@ public class WaitThread implements Runnable {
 		waitForConnection();		
 	}
 	
+	
+	@Override
+	protected void finalize() throws Throwable {
+		local.setDiscoverable(DiscoveryAgent.NOT_DISCOVERABLE);
+		notifier.close();
+	}
+
 	/** Waiting for connection from devices */
 	private void waitForConnection() {
 		// retrieve the local Bluetooth device object
 		LocalDevice local = null;
-		
-		StreamConnectionNotifier notifier;
 		StreamConnection connection = null;
 		
 		// setup the server to listen for connection

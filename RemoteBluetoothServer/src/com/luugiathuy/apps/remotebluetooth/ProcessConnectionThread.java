@@ -15,11 +15,14 @@ public class ProcessConnectionThread implements Runnable{
 	
 	// Constant that indicate command from devices
 	private static final int EXIT_CMD = -1;
+	
+
 	private static final int KEY_RIGHT = 1;
 	private static final int KEY_LEFT = 2;
 	
 	public ProcessConnectionThread(StreamConnection connection)
 	{
+		System.out.println("Creating process connection thread");
 		mConnection = connection;
 	}
 	
@@ -88,5 +91,11 @@ public class ProcessConnectionThread implements Runnable{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		System.out.println("Closing connection...");
+		mConnection.close();
 	}
 }
